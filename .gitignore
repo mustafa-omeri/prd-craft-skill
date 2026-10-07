@@ -1,0 +1,24 @@
+# Test fixture, build output and node_modules
+testProject/
+node_modules/
+
+# Company-internal working documents — NOT part of the published skill set.
+# ⛔ The skill set does not depend on any of these; validate.ps1 §12 verifies that.
+docs/
+oldVersions/
+yeni/
+knowledge-base.md
+HANDOFF.md
+agy.config.json
+.agyignore
+
+# eval output / local scratch
+*.log
+*-backup/
+mut2/
+mutasyon/
+
+# OS noise
+.DS_Store
+Thumbs.db
+desktop.ini

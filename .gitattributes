@@ -1,0 +1,20 @@
+# Normalise line endings so the same bytes work on every platform.
+
+# ⚠️ install.sh MUST stay LF. On a Windows checkout with core.autocrlf=true it
+#    would otherwise become CRLF, and bash then fails with:
+#      $'\r': command not found
+# This is not cosmetic; it breaks the installer on Linux and macOS.
+*.sh text eol=lf
+
+# PowerShell reads these; LF is fine on both engines.
+*.ps1 text eol=crlf
+
+# Everything else: LF in the repository, native on checkout.
+*.md    text eol=lf
+*.mjs   text eol=lf
+*.json  text eol=lf
+*.yml   text eol=lf
+LICENSE text eol=lf
+
+# Keep the installer executable when checked out on a POSIX filesystem.
+install.sh text eol=lf

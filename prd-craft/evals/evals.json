@@ -1,0 +1,126 @@
+[
+  {
+    "skill_name": "prd-craft",
+    "note": "Positive trigger: requests the skill MUST engage with. Negative: requests the skill must NOT engage with. Behavioural: content correctness.",
+    "evals": [
+      {
+        "id": "trigger-pos-1",
+        "type": "positive",
+        "prompt": "I want an app like this: a tool that finds broken links in our documents.",
+        "expected_behavior": [
+          "Asks Gate 0's 3 orienting questions (Channel A, plain text, numbered)",
+          "Does not write a single line of PRD and does not proceed without mirroring",
+          "Does not classify before Gate 0",
+          "In question 3 asks what kind of number is meant (scope / limit / inventory) by name"
+        ]
+      },
+      {
+        "id": "trigger-pos-2",
+        "type": "positive",
+        "prompt": "Set up a handoff, leave this session to the agent that will take it over.",
+        "expected_behavior": [
+          "Moves to the §6 HANDOFF protocol",
+          "Reads the HANDOFF.md at the project root before writing",
+          "Does not write over it if the file belongs to another job or is a fixture; asks the user",
+          "Writes only errors that were genuinely hit into the §0 traps"
+        ]
+      },
+      {
+        "id": "trigger-pos-3",
+        "type": "positive",
+        "prompt": "Write acceptance criteria, and EARS requirements too. The brief is ready, let's move on: the operations team enters invoices from the supplier into Excel by hand from an email screenshot, and the reconciliation takes two days at month end. Happy path: opens the invoice image → picks the supplier → enters the line items and the amount → saves → produces that month's reconciliation in one click. Definition of done: not a single invoice is left unrecorded in a month and the reconciliation finishes in one hour in a single sitting. Scope: one company, one currency, email attachments.",
+        "expected_behavior": [
+          "Reads references/ears-guide.md and gherkin-guide.md",
+          "Links every FR to at least one AC and every AC to at least one FR",
+          "Writes ACs as observable facts and does not bury a Then inside a state"
+        ]
+      },
+      {
+        "id": "trigger-neg-1",
+        "type": "negative",
+        "prompt": "Fix this one-line piece of code: in getTotal(), write total instead of price.",
+        "expected_behavior": [
+          "Does not engage with this skill",
+          "Single-line code work is on the SKILL.md does-not-run list",
+          "Fixes it directly, produces no Gate 0 and no PRD"
+        ]
+      },
+      {
+        "id": "trigger-neg-2",
+        "type": "negative",
+        "prompt": "Read this PRD and summarise it for me in 3 sentences.",
+        "expected_behavior": [
+          "Does not engage with this skill",
+          "Re-reading an already fully written PRD is out of scope",
+          "Produces a summary, writes no new PRD and opens no gate"
+        ]
+      },
+      {
+        "id": "behavior-gate-b2",
+        "type": "behavioral",
+        "prompt": "The user gave the success metric as 'performance will improve, response time will drop'. What do you do?",
+        "expected_behavior": [
+          "Gate B2 does NOT pass — a number form was chosen but there is no target value",
+          "Asks at most 2 rounds, 2-3 questions per round",
+          "If it does not close, writes the item to §17 as an open question with owner and date",
+          "Does not invent a target value itself"
+        ]
+      },
+      {
+        "id": "behavior-number-fabrication",
+        "type": "behavioral",
+        "prompt": "We wrote the PRD docs/meeting-decision-search-prd.md. The scale limit line was left missing and you asked me 'how many files should I check to determine the scale limit?'. My answer: '10 files, but I did not understand the question so I made 10 up.' Update the PRD accordingly.",
+        "expected_behavior": [
+          "Does NOT use the number '10' as a METRIC — the user explicitly said they made it up",
+          "Treats the number as invalid and clarifies which kind of number (scope / limit / inventory) was being asked for",
+          "Fixes the question and asks AGAIN",
+          "May write 'the user did not verify this number' into §21"
+        ]
+      },
+      {
+        "id": "behavior-gate-reopen",
+        "type": "behavioral",
+        "prompt": "At Gate 0 the user said 'this tool does not collect any personal data', Gate 0.7 closed and kvkk-publish-review was not called. In the next turn the user said 'run it on every commit' and this is a tool that writes comments on a PR.",
+        "expected_behavior": [
+          "Reopens the gate BY ITSELF",
+          "Writes both answers side by side as [CONFLICT]",
+          "Asks the user which one is valid",
+          "Does not intervene: writes the rationale 'a PR comment carries a username and an email, so the gate opens'"
+        ]
+      },
+      {
+        "id": "behavior-gate-d-no-question",
+        "type": "behavioral",
+        "prompt": "The Gate D score has been computed: 76/100. The threshold is 90. The gaps are these: (1) No problem evidence in the JTBD section. (2) The effort of the invoice-saving module is not stated. (3) The effort of the reconciliation module is not stated. (4) The target value (1 hour for reconciliation) is not written in the §3 success metric. (5) The §19 scope threshold is not computed. PRD owner: Deniz Kaya.",
+        "expected_behavior": [
+          "Asks NO new question",
+          "Writes what can be written (K number + rationale + owner + change impact)",
+          "Announces what cannot be written to §17 with owner and date",
+          "Does not enter a loop, does not lower the threshold and does not say 'ready for approval'"
+        ]
+      },
+      {
+        "id": "behavior-effabrication",
+        "type": "behavioral",
+        "prompt": "Gate 0.5 chose MVP. The user gave no effort — it was asked and they said 'I don't know'. The scope threshold must be computed. PRD owner: Deniz Kaya.",
+        "expected_behavior": [
+          "Does NOT fabricate an effort",
+          "Writes the threshold as 'NOT COMPUTED' and writes that it was not computed",
+          "Places the gap in §17 with a real person as owner and a date"
+        ]
+      },
+      {
+        "id": "behavior-routing-declaration",
+        "type": "behavioral",
+        "prompt": "A new conversation is starting. The user says: 'How do I add an index to this query in PostgreSQL?' — Which skill engages for this request, and why?",
+        "expected_behavior": [
+          "Writes the decision declaration on the FIRST LINE of the answer: 'skill: <name | none> · rationale: <one sentence>'",
+          "Bases the declaration on the table in ROUTING.md and cites the line number",
+          "Sends the database decision to prd-craft and links it to Gate D's writing boundary",
+          "Applies the Gate D boundary in the body of the answer: separates which decision it writes from which it asks",
+          "If it states that there is no personal data declaration, says with a rationale that kvkk-publish-review does NOT engage"
+        ]
+      }
+    ]
+  }
+]

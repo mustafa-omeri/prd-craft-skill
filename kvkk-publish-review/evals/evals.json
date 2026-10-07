@@ -1,0 +1,139 @@
+[
+  {
+    "skill_name": "kvkk-publish-review",
+    "note": "Positive trigger: requests for which the gate opens. Negative: requests it must NOT engage with. Behavioural: evidence and consistency rules.",
+    "evals": [
+      {
+        "id": "trigger-pos-1",
+        "type": "positive",
+        "prompt": "Is our landing page ready to publish? Is it KVKK compliant, and how is the SEO checklist going?",
+        "expected_behavior": [
+          "Opens both gates: class Publishing → the publishing checklist including KVKK is mandatory",
+          "Does not call any check Mandatory or Conditional before reading the application type matrix",
+          "Starts at Tier A, deletes no row and takes no shortcut",
+          "Produces the report as docs/{feature}-kvkk-yayin-denetimi.md"
+        ]
+      },
+      {
+        "id": "trigger-pos-2",
+        "type": "positive",
+        "prompt": "We have a cookie policy but no privacy notice. We say the legal team is preparing the privacy notice. Are we compliant?",
+        "expected_behavior": [
+          "Makes the comparison BIDIRECTIONALLY",
+          "If one exists and the other does not, writes the outcome as 'Conflict', not 'Compliant'",
+          "If the page is missing, marks the row as 'Gap' and writes 'Page not found' as the evidence",
+          "Does not accept 'the legal team is preparing it' as a status; writes To be verified + owner + date"
+        ]
+      },
+      {
+        "id": "trigger-pos-3",
+        "type": "positive",
+        "prompt": "We added Google Analytics and Meta Pixel to our site but the privacy text only mentions 'form data'. Is there a problem?",
+        "expected_behavior": [
+          "Makes the A→B and B→A comparison",
+          "Lists the differences present in the text but missing on the site and vice versa",
+          "Does not pass analytics and the pixel off as 'no data is sent'",
+          "Makes the IP, redirect, session log and cross-border transfer explicit"
+        ]
+      },
+      {
+        "id": "trigger-neg-1",
+        "type": "negative",
+        "prompt": "How do I add an index to this query in PostgreSQL, and which columns should it go on?",
+        "expected_behavior": [
+          "Does not engage with this skill",
+          "Code and database advice is out of scope",
+          "Leaves the index decision to prd-craft Gate D's writing boundary"
+        ]
+      },
+      {
+        "id": "trigger-neg-2",
+        "type": "negative",
+        "prompt": "Can you write a PRD for this feature? We need user stories and acceptance criteria.",
+        "expected_behavior": [
+          "Does not engage with this skill — it does not write a PRD",
+          "The party that appends its output to a PRD is prd-craft",
+          "Runs an audit and produces no requirements document"
+        ]
+      },
+      {
+        "id": "behavior-no-evidence-no-compliant",
+        "type": "behavioral",
+        "prompt": "The code being audited has not been written yet; there is not a single .java file in the project. How is the report filled in? Report owner and owner of all items: Deniz Kaya. Report path: docs/invoice-kvkk-yayin-denetimi.md",
+        "expected_behavior": [
+          "Applies the rule 'without evidence, Compliant is not written' — the report will have 0 Compliant rows",
+          "Does not audit code from another project and present it as this report",
+          "States the absence of code clearly at the top of the report",
+          "Writes the gaps with the status 'Gap', with owner and date"
+        ]
+      },
+      {
+        "id": "behavior-report-not-gate-pass",
+        "type": "behavioral",
+        "prompt": "The audit report was produced and linked to the PRD. Can the gate be considered closed?",
+        "expected_behavior": [
+          "NO — producing a report is not passing the gate",
+          "The number of gaps is written to the PRD's gate section",
+          "If there are gaps the gate stays OPEN and 'ready to publish' may not be claimed",
+          "The PRD cannot declare itself ready to publish without the report"
+        ]
+      },
+      {
+        "id": "behavior-cli-type-ssrf",
+        "type": "behavioral",
+        "prompt": "The tool to be audited: a single-file Node.js tool that runs in CI. It scans Markdown files and sends a fetch request to EVERY link inside them, then writes the broken ones as a PR comment. It does not listen on a server/port.",
+        "expected_behavior": [
+          "Detects the type as 'CLI / CI work'; does not assume Backend/API just because there is no UI",
+          "The application type matrix contains this row; the rationale for the deviation is written to the report",
+          "Swaps KV-06's unauthorised endpoint check for an SSRF audit",
+          "Writes as Gap: URL allowlist/denylist, the RFC1918 and loopback and 169.254.0.0/16 block, schema restrictions and the redirect hop limit",
+          "States in KV-02 that the cross-border transfer is determined by the content and is not auditable"
+        ]
+      },
+      {
+        "id": "behavior-optional-needs-rationale",
+        "type": "behavioral",
+        "prompt": "This tool has no website, no browser surface, no cookies and no form. What is written for KV-04 and KV-05?",
+        "expected_behavior": [
+          "Writes Optional and gives a ONE-SENTENCE rationale",
+          "Does not delete the row",
+          "'Optional' is not the same as 'closed' — it waits with a decision record",
+          "The Conditional/Optional values in the matrix are never left without a rationale"
+        ]
+      },
+      {
+        "id": "behavior-no-to-be-verified-in-main-table",
+        "type": "behavioral",
+        "prompt": "4 items could not be verified from the code. What is done with them in the report's main table?",
+        "expected_behavior": [
+          "Does NOT leave a To be verified row in the main audit table",
+          "Moves all of them to the 'Not verifiable from code' section with the browser/panel step",
+          "Writes an owner and a target date for each one",
+          "Asks for them to be marked as a blocking open question in the PRD"
+        ]
+      },
+      {
+        "id": "behavior-legal-disclaimer",
+        "type": "behavioral",
+        "prompt": "What is written at the end of the report?",
+        "expected_behavior": [
+          "Copies the mandatory legal disclaimer paragraph VERBATIM",
+          "Writes no verdict such as 'we are KVKK compliant'",
+          "States clearly that it does not replace legal advice"
+        ]
+      },
+      {
+        "id": "behavior-routing-declaration",
+        "type": "behavioral",
+        "prompt": "A new conversation is starting. The user says: 'write a small helper script that compares two files and prints the difference' — Which skill engages for this request, and why?",
+        "expected_behavior": [
+          "Writes the decision declaration on the FIRST LINE of the answer: 'skill: <name | none> · rationale: <one sentence>'",
+          "Because this is a request to write code, the declaration is 'none', written together with its rationale",
+          "States that it is out of scope for both skills, relying on the table in ROUTING.md",
+          "Bases the rationale on this skill's own out-of-scope list (does not write code / does not write a PRD)",
+          "Does not start a KVKK audit because there is no personal data declaration"
+        ]
+      }
+    ]
+  }
+]
