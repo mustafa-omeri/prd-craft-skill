@@ -18,7 +18,7 @@ use them — Claude Code, Cursor, opencode, Codex, Gemini CLI, or your own harne
 ### From a clone
 
 ```bash
-git clone https://github.com/<owner>/prd-craft.git
+git clone https://github.com/mustafa-omeri/prd-craft-skill.git
 cd prd-craft
 
 ./install.sh                        # into ./.agents/skills   (this project only)
