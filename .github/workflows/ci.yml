@@ -14,6 +14,7 @@ jobs:
   validate-pwsh:
     name: Structure checks (pwsh 7)
     runs-on: windows-latest
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
 
@@ -26,13 +27,22 @@ jobs:
   validate-ps51:
     name: Structure checks (Windows PowerShell 5.1 — engine parity)
     runs-on: windows-latest
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
+
+      # Echo the engine first. If this step does not print 5.1, the parity check
+      # below is not testing what it claims to test.
+      - name: confirm the engine
+        shell: cmd
+        run: |
+          powershell -NoProfile -Command "(Get-Host).Version.ToString()"
+          if %ERRORLEVEL% neq 0 exit /b %ERRORLEVEL%
 
       - name: validate.ps1
         shell: cmd
         run: |
-          .\validate.ps1
+          powershell -NoProfile -ExecutionPolicy Bypass -File .\validate.ps1
           if %ERRORLEVEL% neq 0 exit /b %ERRORLEVEL%
 
   evals:
