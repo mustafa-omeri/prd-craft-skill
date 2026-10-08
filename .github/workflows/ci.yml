@@ -2,35 +2,38 @@ name: CI
 
 on:
   push:
-    branches: [main, master]
+    branches: [main]
   pull_request:
   workflow_dispatch:
 
+# Engine parity is checked on a WINDOWS runner, where both engines exist and the
+# result matches what a contributor on Windows will actually see. validate.ps1
+# builds paths with backslashes, which is verified behaviour on Windows only —
+# it is not claimed to work on the Linux runner image.
 jobs:
-  validate:
-    name: Structure checks
-    runs-on: ubuntu-latest
+  validate-pwsh:
+    name: Structure checks (pwsh 7)
+    runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
 
-      - name: Set up PowerShell
-        uses: actions/setup-powershell@v4
-        with:
-          shell-version: '7.4'
-
-      # Both engines must agree. A difference means an encoding bug, not a logic
-      # bug: Windows PowerShell reads a BOM-less file as ANSI.
-      - name: validate.ps1 (pwsh 7)
+      - name: validate.ps1
         shell: pwsh
         run: |
           ./validate.ps1
-          if ($LASTEXITCODE -ne 0) { throw "validate.ps1 failed on pwsh" }
+          if ($LASTEXITCODE -ne 0) { throw "validate.ps1 failed on pwsh 7" }
 
-      - name: validate.ps1 (windows powershell 5.1 — engine parity)
-        shell: powershell
+  validate-ps51:
+    name: Structure checks (Windows PowerShell 5.1 — engine parity)
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: validate.ps1
+        shell: cmd
         run: |
           .\validate.ps1
-          if ($LASTEXITCODE -ne 0) { throw "validate.ps1 failed on powershell 5.1" }
+          if %ERRORLEVEL% neq 0 exit /b %ERRORLEVEL%
 
   evals:
     name: Eval definitions (L0)
@@ -42,12 +45,12 @@ jobs:
         with:
           node-version: '22'
 
-      # L0 is automatic and deterministic. L1 is interactive and human-graded,
-      # so it cannot run here — see CONTRIBUTING.md.
+      # L0 is automatic and deterministic, so it runs here.
+      # L1 is interactive and human-graded, so it cannot — see CONTRIBUTING.md.
+      # The runner exits non-zero on failure and bash runs with -e, so the step
+      # fails on its own. Do not add PowerShell syntax to a bash step.
       - name: run-evals.mjs --selftest
-        run: |
-          node ./evals/run-evals.mjs --selftest
-          if ($LASTEXITCODE -ne 0) { throw "L0 eval definitions failed" }
+        run: node ./evals/run-evals.mjs --selftest
 
   installer:
     name: Installer smoke test
@@ -55,17 +58,13 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '22'
-
-      # An installer that silently copies nothing is worse than no installer.
       - name: install.sh --dry-run
         run: |
           chmod +x ./install.sh
-          ./install.sh --dry-run project
+          ./install.sh --dry-run user
 
-      - name: install.sh into a scratch directory
+      # An installer that silently copies nothing is worse than no installer.
+      - name: install into a scratch directory
         run: |
           set -euo pipefail
           SCRATCH="$(mktemp -d)"
@@ -73,7 +72,7 @@ jobs:
           test -f "$SCRATCH/.agents/skills/prd-craft/SKILL.md"
           test -f "$SCRATCH/.agents/skills/kvkk-publish-review/SKILL.md"
           test -f "$SCRATCH/.agents/skills/ROUTING.md"
-          echo "installed skill set is complete"
+          echo "the installed skill set is complete"
 
   linecount:
     name: SKILL.md size limit
@@ -81,9 +80,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # Progressive disclosure only works if SKILL.md stays small enough to sit
-      # in an agent's context. Reported as a warning, not a hard failure, so a
-      # legitimate change is a conscious decision rather than a silent drift.
+      # Progressive disclosure only works while SKILL.md stays small enough to sit
+      # in an agent's context window.
       - name: report line counts
         run: |
           set -euo pipefail
