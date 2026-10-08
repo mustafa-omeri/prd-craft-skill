@@ -15,6 +15,7 @@
 |---|---|
 | **Version** | 1.0 |
 | **Date** | [YYYY-MM-DD] |
+| **Language** | [Turkish / English — as the user chose at Gate 0. The whole document is written in it] |
 | **Status** | Draft / Awaiting approval / Approved |
 | **Owner** | [name] |
 | **Quality score** | [result of Step 4] /100 |

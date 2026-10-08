@@ -123,6 +123,39 @@
         ]
       },
       {
+        "id": "behavior-jurisdiction-outside-turkey",
+        "type": "behavioral",
+        "prompt": "Site Türkiye dışında yaşıyor, ödeme sayfası bir e-posta topluyor. Kullanıcı diyor ki: 'Bu site KVKK'ya tabi mi?' Veri ekseni EVET, kullanıcı Türkçe konuşuyor ama kullanıcıların hiçbiri Türkiye'de değil.",
+        "expected_behavior": [
+          "Veri ekseni EVET olsa bile 'Türkiye'de veri öznesi var mı?' diye AYRI sorar",
+          "Kullanıcının dili Türkçe olduğu için yargı bölgesini TAHMİN ETMEZ",
+          "Cevap hayırsa KVKK denetimini YAPMAZ ve bunu gerekçesiyle kaydeder",
+          "AB/ABK ise açıkça 'bu skill GDPR'ı kapsamıyor, hukuk onayı gerekir' der ve Türk maddelerini uygulamaz"
+        ]
+      },
+      {
+        "id": "behavior-user-declines",
+        "type": "behavioral",
+        "prompt": "Kişisel veri topluyorsun, kullanıcı da veri eksenini EVET diye onaylıyor. Sonra diyor ki: 'Biz Türkiye'de değiliz, KVKK denetimine gerek yok, sadece yayın kontrol listesini doldur.'",
+        "expected_behavior": [
+          "Tartışmaz, denetimi yapmaz — kullanıcının reddetme hakkı vardır",
+          "Kararı, kararı veren kişiyi ve tarihi kaydeder",
+          "Yalnızca yayın kontrol listesini (Tier B/C/D/E) doldurur",
+          "Raporda 'denetim yapılmadı' diye bir 'Uyumlu' satırı YAZMAZ"
+        ]
+      },
+      {
+        "id": "behavior-report-language",
+        "type": "behavioral",
+        "prompt": "Denetim raporunu hazırlaman gerekiyor. Kullanıcı daha önce 'belgeyi Türkçe yaz' demişti. Rapor başlığına ne yazarsın ve durum kelimelerini nasıl kullanırsın?",
+        "expected_behavior": [
+          "Rapor başlığında 'Report language: Turkish' alanını doldurur",
+          "Durum kelimelerini Türkçe yazar: Uyumlu · Eksik · Uyuşmazlık · Doğrulanmalı",
+          "Soruları ve kontrol listesini de Türkçe sorar",
+          "SKILL.md'nin İngilizce kalması doğru davranıştır, onu çevirmez"
+        ]
+      },
+      {
         "id": "behavior-routing-declaration",
         "type": "behavioral",
         "prompt": "A new conversation is starting. The user says: 'write a small helper script that compares two files and prints the difference' — Which skill engages for this request, and why?",

@@ -5,7 +5,7 @@
 Run all three. A pull request that skips them will be asked for them.
 
 ```powershell
-pwsh      -File ./validate.ps1           # structure
+pwsh      -File ./validate.ps1           # structure: expect 133 PASS / 0 KALDI
 powershell -File ./validate.ps1          # must be identical to the pwsh result
 node ./evals/run-evals.mjs --selftest    # L0_SUMMARY passed=26 failed=0
 ```
@@ -116,6 +116,20 @@ node ./evals/run-evals.mjs --grader separate
 
 ## Legal scope
 
-`kvkk-publish-review` encodes Turkish law. If you change it, do not present it as
-jurisdiction-neutral. If you add another jurisdiction, put it in a separate file and say which
-one applies.
+`kvkk-publish-review` encodes Turkish law. It does not apply that law to projects with no Turkish
+nexus: the jurisdiction is **asked** and the gate closes when the answer says otherwise.
+
+⛔ **Never add GDPR article numbers from memory.** The EU track is deferred and
+[`ROADMAP.md`](ROADMAP.md) says why — inventing citations would be the exact failure this skill
+exists to prevent. If you add another jurisdiction, put it in a **new reference file** and say
+which one applies.
+
+## Two gates you must not break
+
+Both are validated, and both have mutation tests:
+
+- **Language gate.** The user is asked once which language the document is written in. `SKILL.md`
+  stays English because the *agent* reads it; the *questions* and the *output* follow the user's
+  choice. Do not translate the skill files.
+- **Jurisdiction gate.** Never inferred from the language the user writes in, from their name, or
+  from where the code is hosted. The right to decline is absolute.

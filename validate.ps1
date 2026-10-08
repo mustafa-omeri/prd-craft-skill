@@ -378,6 +378,50 @@ foreach ($sp in @("$prd\SKILL.md", "$kvkk\SKILL.md")) {
         "$d : it is written that the decision is made in ROUTING.md, not in the body"
 }
 
+Write-Host "`n=== 12d. Yargi bolgesi kapisi ve dil kapisi ===" -ForegroundColor Cyan
+# ⛔ 1. YARGIL BOLGESI KAPISI. "Kisisel veri var mi" ile "bu kisiler kimdir" ayri
+#    sorulardir. Turkiye disinda bir gelistirici e-posta topluyorsa veri ekseni
+#    YES der ama Turk hukuku ona uygulanmamalidir. Kapinin hic olmamasi, skill'in
+#    kullanicinin reddedememesi anlamina gelirdi.
+$jBody = $kBody.ToLowerInvariant()
+Check ($jBody.Contains('jurisdiction gate') -or $jBody.Contains('1.1')) `
+    'kvkk-publish-review : yargi bolgesi kapisi tanimli'
+Check ($jBody.Contains('do not infer') -or $jBody.Contains('never infer') -or $jBody.Contains('never inferred')) `
+    'kvkk-publish-review : yargi bolgesi TAHMIN EDILMEZ'
+Check ($jBody.Contains('decline')) `
+    'kvkk-publish-review : kullanicinin reddetme hakki yazili'
+Check ($jBody.Contains('not covered')) `
+    'kvkk-publish-review : AB/ABK kapsam disi olarak acikca yazili'
+
+# ⛔ 2. DIL KAPISI. SKILL.md Ingilizce kalir (onu ajan okur), ama kullaniciya
+#    sorulan sorular ve uretilen belge kullanicinin dilinde olmalidir. Yanlis
+#    cikan bir cikti, okunamadigi icin kanit degildir.
+Check ($jBody.Contains('language gate')) `
+    'kvkk-publish-review : dil kapisi tanimli'
+$skillL = $skill.ToLowerInvariant()
+Check ($skillL.Contains('language gate')) `
+    'prd-craft : dil kapisi tanimli (Gate 0)'
+$tplL = $prdTpl.ToLowerInvariant()
+Check ($tplL.Contains('**language**')) `
+    'prd-template.md : dil secimi baslikta kayit altinda'
+$rrL = (Get-Content "$kvkk\templates\review-report.md" -Raw -Encoding UTF8).ToLowerInvariant()
+# Not the anchors stop before the closing asterisks: the template writes
+# "**Report language:**", so anchoring on '**report language**' would miss it.
+Check ($rrL.Contains('**report language') -and $rrL.Contains('**jurisdiction')) `
+    'review-report.md : dil ve yargi bolgesi baslikta kayit altinda'
+
+# ⛔ 3. GDPR ertelemesi ROADMAP.md'de gorunur olmali. Bilinen bir bosluk
+#    yalnizca bir gelistiricinin kafasinda yasiyorsa unutulur.
+$rm = Join-Path $root 'ROADMAP.md'
+Check (Test-Path $rm) 'ROADMAP.md mevcut (ertelenen isler gorunur)'
+if (Test-Path $rm) {
+    $rmL = (Get-Content $rm -Raw -Encoding UTF8).ToLowerInvariant()
+    Check ($rmL.Contains('gdpr') -and $rmL.Contains('deferred')) `
+        'ROADMAP.md : GDPR ertelemesi kayitli'
+    Check ($rmL.Contains('do not add gdpr article numbers from memory')) `
+        'ROADMAP.md : GDPR maddeleri akildan yazilmaz uyarisi var'
+}
+
 Write-Host "`n=== 13. Does the eval runner work (L0) ===" -ForegroundColor Cyan
 $runner = Join-Path $root 'evals\run-evals.mjs'
 if (-not (Test-Path $runner)) {

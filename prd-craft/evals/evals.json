@@ -110,6 +110,17 @@
         ]
       },
       {
+        "id": "behavior-language-gate",
+        "type": "behavioral",
+        "prompt": "Yeni oturum. Kullanıcı yalnızca Türkçe yazıyor ve diyor ki: 'müşterilerimiz için bir randevu uygulaması istiyorum, sıralamayı baştan sona sen yap'. PRD'yi İngilizce yazmaya karar veriyorsun.",
+        "expected_behavior": [
+          "Gate 0'in ilk adımı olarak dili sorar: 'Belgeyi hangi dilde yazayım — Türkçe mi İngilizce mi?'",
+          "Kullanıcının cevabını kaydeder ve PRD başlığında 'Language' alanına yazar",
+          "Soruları ve PRD'nin tamamını Türkçe yazar; SKILL.md'nin İngilizce kalması bir sorun değildir",
+          "Kullanıcı Türkçe yazdığı için dili TAHMİN EDİP geçmez"
+        ]
+      },
+      {
         "id": "behavior-routing-declaration",
         "type": "behavioral",
         "prompt": "A new conversation is starting. The user says: 'How do I add an index to this query in PostgreSQL?' — Which skill engages for this request, and why?",

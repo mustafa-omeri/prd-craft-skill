@@ -110,11 +110,33 @@ Full rules: [`prd-craft/SKILL.md`](prd-craft/SKILL.md).
 
 ## Jurisdiction warning
 
-`kvkk-publish-review` encodes **Turkish law (KVKK, Law 6698)** and is written for **Turkey**.
+`kvkk-publish-review` audits **Turkish law (KVKK, Law 6698)**.
 
-Outside Turkey, use it for its *mechanics* — the data inventory, the bidirectional
-notice-versus-site comparison, the evidence that consent is actually enforced, the publishing
-checklist — and **replace every legal citation with your own jurisdiction's rules.**
+It does **not** apply that law to projects that have no Turkish nexus. Before any audit it asks
+**two separate questions**:
+
+| Question | If yes |
+|---|---|
+| Do we collect personal data? | The data axis opens |
+| **Are those data subjects in Turkey?** | The KVKK audit runs |
+
+Answering `YES` to the first and `NO` to the second **closes the gate** — the decision and its
+rationale are recorded and the audit does not run. **The jurisdiction is never inferred** from the
+language you write in, from your name, or from where the code is hosted, and **you can decline the
+audit entirely** — the skill records that and moves on.
+
+⚠️ **EU/EEA is not covered yet.** The skill says so plainly and requires legal review instead of
+inventing GDPR citations. [ROADMAP.md](ROADMAP.md) lists exactly what an EU track would need.
+
+---
+
+## Language
+
+The skill **asks** which language the document should be written in — Turkish or English — and
+writes the questions *and* the document in that language. A Turkish-only user is never handed an
+English PRD.
+
+`SKILL.md` itself stays English on purpose: **the agent** reads that file, not the user.
 
 ---
 
@@ -134,7 +156,7 @@ kvkk-publish-review/
   evals/evals.json
 ROUTING.md                     the single routing point for both skills
 evals/run-evals.mjs            eval runner (L0 automatic + L1 interactive)
-validate.ps1                   122 structural checks over the skill set
+validate.ps1                   133 structural checks over the skill set
 ```
 
 ---
@@ -144,7 +166,7 @@ validate.ps1                   122 structural checks over the skill set
 Run both checks before you open a pull request:
 
 ```powershell
-pwsh      -File ./validate.ps1            # structure: expect 122 GECTI / 0 KALDI
+pwsh      -File ./validate.ps1            # structure: expect 133 PASS / 0 KALDI
 powershell -File ./validate.ps1           # must be identical; a difference means an encoding bug
 node ./evals/run-evals.mjs --selftest    # expect: L0_SUMMARY passed=26 failed=0
 ```

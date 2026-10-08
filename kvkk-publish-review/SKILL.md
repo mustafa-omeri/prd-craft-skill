@@ -12,10 +12,12 @@ clean-looking audit report.**
 1. **KVKK / Privacy Audit** — every job that collects, stores or processes personal data.
 2. **Publishing Checklist** — every job that will go onto the public web.
 
-> ⚠️ **JURISDICTION:** the legal criteria here are **Turkish law (KVKK, Law 6698)** and are
-> written for **Turkey**. For a project outside Turkey, use this skill for its *mechanics*
-> (data inventory, notice-vs-site comparison, consent enforcement evidence, publishing checklist)
-> and replace every legal citation with the applicable jurisdiction's rules.
+> ⚠️ **JURISDICTION WARNING:** the legal criteria here are **Turkish law (KVKK, Law 6698)** and
+> are written for **Turkey**. This is a **gate, not a blanket ban**: §1 asks who the data
+> subjects are. For a project outside Turkey the audit does **not** run — the skill says so
+> plainly and requires legal review instead. It never applies Turkish law to a project that has
+> no Turkish nexus, and the user can always decline. See `ROADMAP.md` for what an EU track would
+> need.
 
 > **Philosophy:** A line being yellow, orange or red in an audit report is not a problem.
 > There is exactly one problem: **it says "not checked."**
@@ -51,18 +53,52 @@ Table and ordering: `ROUTING.md`.
 
 | Condition | Outcome |
 |---|---|
-| **Personal data declaration `YES`** (form · membership · newsletter · payment · analytics · pixel · session log · chat) | The KVKK audit is **mandatory** |
-| Class `Publishing` (public web: landing page, corporate site, portfolio, documentation site) | The publishing checklist is **mandatory** |
-| Neither | ⛔ This skill **does not run.** The rationale is written to the PRD |
+| **Personal data declaration `YES`** (form · membership · newsletter · payment · analytics · pixel · session log · chat) **and jurisdiction Turkey** | The KVKK audit is **mandatory** |
+| Class `Publishing` (public web: landing page, corporate site, portfolio, documentation site) **and jurisdiction Turkey** | The publishing checklist is **mandatory** |
+| Jurisdiction **EU/EEA** | ⛔ **Not covered.** Write that this skill does not audit GDPR and that legal review is required. Do **not** apply Turkish articles |
+| Jurisdiction **neither**, or the user declines | Gate closed. The decision and its rationale go to the PRD |
+| Jurisdiction `unsure` | **Ask before deciding.** Do not guess |
+
+### 1.1 ⛔ The jurisdiction gate — ask, do not assume
+
+⛔ **"Do we collect personal data?" and "where are those people?" are two different questions.**
+A developer in another country collecting emails answers `YES` on the data axis and must still be
+asked the second one. Answer it in the language chosen at Gate 0:
+
+| Question | Answer | Outcome |
+|---|---|---|
+| *"Are the data subjects in Turkey — users, customers or visitors there?"* | Yes / No / **Unsure** | feeds the table above |
+| *"Do you want this audit at all?"* | Yes / **No** | `No` closes the gate immediately |
+
+⛔ **The right to decline is absolute.** If the user says they do not want a KVKK audit, **the
+skill does not argue and does not audit.** It records: the jurisdiction, the decision, who made
+it and the date. A gate the user cannot switch off is not a gate, it is a tax.
+
+⛔ **Never infer the jurisdiction** from the language the user writes in, from their name, or
+from where the code is hosted. Hosting in Turkey is **not** a Turkish data subject; a Turkish
+speaker may run a site with no Turkish users at all. Only the user's own answer counts, and
+`unsure` is a legitimate answer that means **ask**.
+
+> ⛔ **The Publishing class is not exempt from KVKK.** In the Publishing class the data axis may be
+> `NO` only **with a written rationale** (e.g. "read-only documentation, no one-way data entry,
+> verified by application type detection"). And a `NO` on the data axis does **not** close the
+> gate on its own — the jurisdiction question still runs.
+
+### 1.2 The language gate
+
+If `prd-craft` has already asked which language the document is written in, reuse that answer.
+If this skill runs standalone, ask once before the first question: *"Turkish or English?"*
+
+Then **every** question, checklist item and report section is in that language — **including the
+status words**. A `Gap` written as `Eksik` is not a translation detail: a report the reader
+cannot read is not evidence of anything. This SKILL.md stays English because **the agent** reads
+it, not the user.
 
 > ⛔ **This skill does not engage on its own.** Without a personal data declaration the audit does
 > not start. Saying "there is no data" is an **observation**; the declaration is taken **from the
 > user** and recorded with its rationale — otherwise an audit applied to every project becomes an
-> audit applied to none.
->
-> **The Publishing class is not exempt from KVKK.** In the Publishing class the data axis may be
-> `NO` only **with a written rationale** (e.g. "read-only documentation, no one-way data entry,
-> verified by application type detection").
+> audit applied to none. The same applies to the **jurisdiction**: it is asked (§1.1), never
+> inferred.
 
 ### What This Skill Does Not Do
 

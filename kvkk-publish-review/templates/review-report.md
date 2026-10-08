@@ -9,9 +9,11 @@
 # KVKK / Publishing Audit Report — [Project / Feature Name]
 
 **Audit date:** [YYYY-MM-DD]
+**Report language:** [Turkish / English — the status words below are written in this language too]
 **Scope:** [commit hash / branch / release address]
-**Application type:** [one of the 7 types — the matrix in `references/kvkk-compliance-audit.md` §1]
+**Application type:** [one of the 7 types - the matrix in `references/kvkk-compliance-audit.md` §1]
 **Triggering gate:** [Data axis `YES` or class `Publishing`, or both]
+**Jurisdiction:** [Turkey - KVKK Law 6698] | [EU/EEA - **not covered by this skill, legal review required**] | [declined by the user on <date>, closed]
 **Audited by:** [name / agent]
 
 ---
@@ -19,10 +21,15 @@
 ## 1. Status Legend
 
 **A status has four values:** `Compliant` · `Gap` · `Conflict` · `To be verified`
+*(In a Turkish report: `Uyumlu` · `Eksik` · `Uyuşmazlık` · `Doğrulanmalı`)*
 
 > **Without evidence, `Compliant` is not written.** Everywhere you are unsure, write
 > `To be verified`. Because this section grants publication permission, a "Compliant" written on
 > a material matter creates legal risk.
+>
+> ⛔ **This audit covers Turkish law only.** If the jurisdiction is EU/EEA, do not fill this
+> template in: write that GDPR is **not covered**, require legal review, and close. A Turkish
+> article number applied to a project with no Turkish nexus is worse than no report.
 
 ---
 

@@ -122,18 +122,28 @@ Step 6  Delivery Gate (§5) → update HANDOFF.md (§6)
 ```
 
 ---
-
 ### Gate 0 — Guided Brief
 
-> ⛔ **CANNOT BE SKIPPED.** Even if the user throws one sentence at you, the agent cannot jump to classification, compliance or code analysis. Channel A — plain text:
+> ⛔ **CANNOT BE SKIPPED.** Even if the user throws one sentence at you, the agent cannot jump to classification, compliance or code analysis.
 
-1. **User & Pain Point** — *"Who will use this feature, and what specific difficulty do they
-   live with today?"* *(E.g. does the operations team still enter the data by hand in Excel?)*
-2. **Core Flow & Happy Path** — *"When the user opens this feature, what exactly do they do step
-   by step on the most critical happy path?"* *(E.g. picks a filter → reviews the results → sends it for approval)*
-3. **Success & Definition of "Done"** — *"When this work is finished, what do we see that makes
-   us say 'this is exactly what we wanted'?"* — **ask what kind of number you mean** (scope, limit or inventory — §0/7); if the answer is "I don't know", decide together what we look at.
+**0 · Language gate — ask first, ask once.** Before any other question: *"Which language should I
+write the document in — Turkish or English?"* Record the answer in the PRD header
+(`**Language**`). Then, for the whole run: **the questions you ask and the document you write are
+in that language.** This file stays English because **the agent** reads it, not the user.
+⛔ If the user keeps switching mid-conversation, ask once more and record the final choice — do
+not silently follow the last message. A Turkish-only user must never be handed an English PRD,
+and the language is **not** a mirror of the agent's own output.
 
+**Then Gate 0 itself — Channel A, plain text:**
+
+1. **User & Pain Point** — *"Who will use this feature, and what specific difficulty do they live
+   with today?"* *(E.g. does the operations team still enter the data by hand in Excel?)*
+2. **Core Flow & Happy Path** — *"When the user opens this feature, what exactly do they do step by
+   step on the most critical happy path?"* *(E.g. picks a filter → reviews the results → sends it
+   for approval)*
+3. **Success & Definition of "Done"** — *"When this work is finished, what do we see that makes us
+   say 'this is exactly what we wanted'?"* — **ask what kind of number you mean** (scope, limit or
+   inventory — §0/7); if the answer is "I don't know", decide together what we look at.
 **Spike shortcut — two-phase; it looks at *content*, not *form*. 1 · Form test (at Gate 0):** If
 the request looks like a *"will it work?" / "which is better?"* question, ask **only questions 1
 and 3**; question 2 (happy path) is skipped — no solution exists yet, so what the screen looks
@@ -271,8 +281,16 @@ This skill **does not perform a compliance audit.** It only decides whether the 
 
 | Condition | Outcome |
 |---|---|
-| Data axis `YES` **or** class `Publishing` | `kvkk-publish-review` is **in play** |
+| Data axis `YES` **and** jurisdiction **Turkey** | `kvkk-publish-review` is **in play** |
+| Data axis `YES` **and** jurisdiction **EU/EEA** | Gate **not covered** — say so plainly and require legal review. See `ROADMAP.md` |
+| Class `Publishing`, jurisdiction Turkey | `kvkk-publish-review` is **in play** |
 | Neither | Gate closed. The rationale is written to §4 and §21 |
+
+⛔ **Ask the jurisdiction; do not assume it.** "Where are the data subjects?" is a different
+question from "do we collect personal data?". A developer in another country collecting emails
+gets `YES` on the data axis and must still be able to say **"KVKK does not apply to us"** — the
+skill records that and closes the gate. It never argues. The question is answered in the
+language chosen at Gate 0.
 
 > **Why this separation:** a KVKK or publishing gate is not mandatory in every project; opening
 > it everywhere hides the workload in projects that genuinely need compliance. **The Publishing

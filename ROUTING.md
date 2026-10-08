@@ -40,6 +40,8 @@ skill: <prd-craft | kvkk-publish-review | none | undecided> · rationale: <one s
 | Query · index · schema · column selection | `prd-craft` | ⛔ It is a database decision; it falls under Gate D's **writing boundary** |
 | **Behaviour audit of an existing tool** (code is read, "is this tool safe / KVKK compliant / which type" ) | `kvkk-publish-review` | ⛔ **Code exists but has not been examined** — type detection + KV-01..KV-06 belong to this class |
 | Writing the **result** of an audit · locating the report file | `kvkk-publish-review` | The canonical report name and the §20 link are this skill's rules |
+| "Are we compliant?" asked from **outside Turkey**, or the user wants to **decline** the audit | `kvkk-publish-review` | It is still this skill that asks the jurisdiction and records the decision — the gate closes inside it, the routing is not the place to argue it |
+| Which **language** should the document be written in? | `prd-craft` | The language gate is asked once, at Gate 0, and reused by every later skill |
 | Single-line code fix · formatting only · pure code review | `none` | Done directly |
 | Re-reading / summarising an already written document | `none` | Not rewritten, summarised |
 | Writing code · general architecture advice | `none` | These two skills do not write code |
@@ -77,6 +79,15 @@ skill: <prd-craft | kvkk-publish-review | none | undecided> · rationale: <one s
 | **Personal data declaration** | Data axis `YES` — personal data is collected / stored / processed | The KVKK audit is **mandatory** |
 | **Publishing class** | Public web | The publishing checklist is **mandatory** (KVKK may be answered `NO` with a written rationale) |
 | Neither | — | ⛔ This skill **does not run**, the rationale is written to the PRD |
+
+⛔ **A `YES` on the data axis is not enough on its own.** Turkish law applies to **data subjects
+in Turkey**, not to every project that stores an email address. The **jurisdiction** is asked
+separately (`kvkk-publish-review` §1.1) and it is **never inferred** from the language the user
+writes in, from their name, or from where the code is hosted.
+
+**The user can decline.** *"I do not want a KVKK audit"* closes the gate. The decision, who made
+it and the date are recorded in the PRD. The skill does not argue. `ROADMAP.md` lists the
+jurisdictions that are **not** covered — currently every one except Turkey.
 
 > ⛔ **Without a data-axis declaration the KVKK audit does not start.** Saying "there is no data"
 > is an observation; the declaration is taken **from the user** and recorded with its rationale.
